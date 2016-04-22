@@ -24,6 +24,15 @@
 	    margin-right: -1px;
 	    margin-left: -1px;
 	}
+        .choose-file {
+            font-family: Roboto;
+            font-weight: 100;
+	    font-size: 2em;
+	    height: 1.5em;
+	    width: 13em;
+	    margin-right: -1px;
+	    margin-left: -1px;
+        }
     }
     @media (max-width: 750px) {
         #h1 {
@@ -41,18 +50,39 @@
 	    font-weight: 100;
 	    font-size: 2em;
 	    height: 2.5em;
-	    width: 88%;
-            text-align: center;
-            margin-right: 0px;
-            margin-left: 0px;
+	    width: 13em;
+	    margin-right: -1px;
+	    margin-left: -1px;
 	}
+        .choose-file {
+            font-family: Roboto;
+            font-weight: 100;
+	    font-size: 2em;
+	    height: 1.5em;
+	    width: 13em;
+	    margin-right: -1px;
+	    margin-left: -1px;
+        }
     }
-</style
+</style>
+<script>
+    function uploadMovies() {
+        console.log("upload movie script"); 
+        document.getElementById("btn-wrapper").innerHTML = "";
+        document.getElementById("btn-wrapper").innerHTML += "<font class=\"btn\" style=\"margin-left: -3em;\">Select Movie to Upload:</font>" +
+                                                             "<form action=\"upload4.php\" method=\"post\" enctype=\"multipart/form-data\">" +
+                                                             "<input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\" class=\"choose-file\"><br>" +
+                                                             "<input type=\"submit\" value=\"Upload Movie\" name=\"submit\" class=\"btn\">" +
+                                                             "</form>";
+        
+    }
+</script>
 </head>
 <body>
 <h1 id="h1">TestTube.php</h1>
+<div id="select-file-txt" style="font-family: Roboto; font-weight: 100; font-size: 2em; text-align: center;"></div>
 <div id="btn-wrapper">
-<button class="btn">Watch Movies</button><span id="br-id"></span><button class="btn" id="bottom-btn">Upload Movies</button>
+<button class="btn">Watch Movies</button><button class="btn" onclick="uploadMovies();">Upload Movies</button>
 </div>
 </body>
 </html>
