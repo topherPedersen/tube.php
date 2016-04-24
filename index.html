@@ -6,61 +6,93 @@
     #h1 {
         margin-top: 3em;
         text-align: center;
-	    font-family: Roboto;
-	    font-weight: 100;
-	    font-size: 4em;
-        }
-	#btn-wrapper {
-	    text-align: center;
-	}
-	.btn {
-	    font-family: Roboto;
-	    font-weight: 100;
-	    font-size: 2em;
-	    height: 2.5em;
-	    width: 13em;
-	    margin-right: -1px;
-	    margin-left: -1px;
-	}
-    .choose-file {
+	font-family: Roboto;
+	font-weight: 100;
+	font-size: 4em;
+    }
+    #btn-wrapper {
+        text-align: center;
+    }
+    .btn {
         font-family: Roboto;
-	    font-size: 2em;
-        font-weight: 100;
-	    height: 1.5em;
-	    width: 13em;
-	    margin-right: -1px;
-	    margin-left: -1px;
-        }
-    #hidden-form {
-	    visibility: hidden;
-	}
+	font-weight: 100;
+        font-size: 2em;
+	height: 2.5em;
+	width: 13em;
+	margin-right: -1px;
+	margin-left: -1px;
+    }
+    #upload_form {
+	visibility: hidden;
+    }
 </style>
-<script>
-    function uploadMovies() {
-	
-	    alert("NOTICE: The page 'dangerous.php' will not load until file upload has finished. It may appear as if your browser has frozen, however it is most likely that the file is still uploading. In a polished production product, you would want to use AJAX to eliminate this. This framework however is meant to be as simple as possible, and does not utilize AJAX.");
-		
-        document.getElementById('fileToUpload').click();
-
-		function submitForm() {
-		    console.log(document.getElementById('fileToUpload').value);
-		    if (document.getElementById('fileToUpload').value != "") {
-			    document.getElementById('hidden-submit-btn').click();
-			}
-		}
-		setInterval(submitForm, 250);
-	}
-</script>
 </head>
 <body>
 <h1 id="h1">dangerous.php</h1>
-<div id="select-file-txt" style="font-family: Roboto; font-weight: 100; font-size: 2em; text-align: center;"></div>
 <div id="btn-wrapper">
-<button class="btn">Watch Movies</button><button class="btn" onclick="uploadMovies();">Upload Movies</button>
-<form action="dangerous.php" method="post" enctype="multipart/form-data" id="hidden-form"> 
-<input type="file" name="fileToUpload" id="fileToUpload" class="choose-file"><br>
-<input type="submit" value="Upload Movie" name="submit" id="hidden-submit-btn" class="btn">
+<button class="btn" id="left-btn" onclick="leftButtonFunction();">Watch Movies</button><button class="btn" id="right-btn" onclick="rightButtonFunction();">Upload Movies</button>
+<form id="upload_form" enctype="multipart/form-data" method="post">
+  <input type="file" name="file1" id="file1"><br>
+  <input type="button" name="hiddenUploadBtn" id="hiddenUploadBtn" value="Upload File" onclick="uploadFile()">
+  <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+  <h3 id="status"></h3>
+  <p id="loaded_n_total"></p>
 </form>
 </div>
+<script>
+      function _(el) {
+    return document.getElementById(el);
+  }
+  function uploadFile() {
+    var file = _("file1").files[0];
+    console.log("file name: " + file.name);
+    console.log("file size: " + file.size);
+    console.log("file type: " + file.type);
+    var formdata = new FormData();
+    formdata.append("file1", file);
+    var ajax = new XMLHttpRequest();
+    ajax.upload.addEventListener("progress", progressHandler, false);
+    ajax.addEventListener("load", completeHandler, false);
+    ajax.addEventListener("error", errorHandler, false);
+    ajax.addEventListener("abort", abortHandler, false);
+    ajax.open("POST", "dangerous.php");
+    ajax.send(formdata);
+  }
+
+  function progressHandler(event) {
+    _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+    var percent = (event.loaded / event.total) * 100;
+    _("progressBar").value = Math.round(percent);
+    _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+  }
+
+  function completeHandler(event) {
+    _("status").innerHTML = event.target.responseText;
+    _("progressBar").value = 0;
+  } 
+
+  function errorHandler(event) {
+    _("status").innerHTML = "Upload Failed";
+  }
+
+  function abortHandler(event) {
+    _("status").innerHTML = "Upload Aborted";
+  }
+    var buttonClickStatus = false;
+    function rightButtonFunction() {
+        if (buttonClickStatus == false) {
+            document.getElementById('left-btn').innerHTML = "Select File";
+            document.getElementById('right-btn').innerHTML = "Upload File";
+            buttonClickStatus = true;
+        } else {
+            document.getElementById('hiddenUploadBtn').click();
+        }
+    }
+    function leftButtonFunction() {
+        if (buttonClickStatus == true) {
+            document.getElementById("file1").click();
+        }
+    }
+</script>
 </body>
 </html>
