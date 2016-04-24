@@ -128,7 +128,7 @@
                     var numberOfMovies = dataReturned.movies.length;
                     //alert(numberOfMovies);
                     document.getElementById('mainContent').innerHTML = ""; // remove everything but h1
-                    for (i = numberOfMovies - 1; i >= 0 && i >= numberOfMovies - 101; i--) {
+                    for (i = 0; i < numberOfMovies && i < 100; i++) {
                         document.getElementById('movieContent').innerHTML += "<a class=\"movieClass\" href=\"" + dataReturned.movies[i].filename + "\"><p>" + dataReturned.movies[i].title + "</p></a>";
                     }
                 }
