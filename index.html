@@ -96,6 +96,21 @@
   function abortHandler(event) {
     _("status").innerHTML = "Upload Aborted";
   }
+
+   function requestHTML(url) {
+       var httpRequest = new XMLHttpRequest();
+       httpRequest.open("GET", url, true);
+       httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+       httpRequest.onreadystatechange = function() {
+           if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+               document.getElementById('mainContent').innerHTML = "";
+               document.getElementById('movieContent').innerHTML = "";
+               document.getElementById('mainContent').innerHTML += httpRequest.responseText;
+           }
+       }
+       httpRequest.send();
+    }
+    
     var buttonClickStatus = false;
     function rightButtonFunction() {
         if (buttonClickStatus == false) {
@@ -129,7 +144,11 @@
                     //alert(numberOfMovies);
                     document.getElementById('mainContent').innerHTML = ""; // remove everything but h1
                     for (i = 0; i < numberOfMovies && i < 100; i++) {
-                        document.getElementById('movieContent').innerHTML += "<a class=\"movieClass\" href=\"" + dataReturned.movies[i].filename + "\"><p>" + dataReturned.movies[i].title + "</p></a>";
+                        //document.getElementById('movieContent').innerHTML += "<a class=\"movieClass\" href=\"" + dataReturned.movies[i].filename + "\"><p>" + dataReturned.movies[i].title + "</p></a>";
+                        document.getElementById('movieContent').innerHTML += "<p class=\"movieClass\" id=\"" + i + "\">" + dataReturned.movies[i].title + "</p>";
+                        var url = dataReturned.movies[i].filename.slice(0, -4) + ".html";
+                        document.getElementById(i.toString()).onclick = function() {requestHTML(url);};
+                        //requestHTML((dataReturned.movies[i].filename).slice(0, -4) + ".html");                                                 
                     }
                 }
             }
