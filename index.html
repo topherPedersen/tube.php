@@ -97,6 +97,10 @@
     _("status").innerHTML = "Upload Aborted";
   }
 
+
+
+
+
    function requestHTML(url) {
        var httpRequest = new XMLHttpRequest();
        httpRequest.open("GET", url, true);
@@ -110,6 +114,9 @@
        }
        httpRequest.send();
     }
+
+
+
     
     var buttonClickStatus = false;
     function rightButtonFunction() {
@@ -141,14 +148,17 @@
                     // DO STUFF HERE
                     // dataReturned.movies[0].title || dataReturned.movies[0].filename
                     var numberOfMovies = dataReturned.movies.length;
-                    //alert(numberOfMovies);
                     document.getElementById('mainContent').innerHTML = ""; // remove everything but h1
                     for (i = 0; i < numberOfMovies && i < 100; i++) {
-                        //document.getElementById('movieContent').innerHTML += "<a class=\"movieClass\" href=\"" + dataReturned.movies[i].filename + "\"><p>" + dataReturned.movies[i].title + "</p></a>";
-                        document.getElementById('movieContent').innerHTML += "<p class=\"movieClass\" id=\"" + i + "\">" + dataReturned.movies[i].title + "</p>";
-                        var url = dataReturned.movies[i].filename.slice(0, -4) + ".html";
-                        document.getElementById(i.toString()).onclick = function() {requestHTML(url);};
-                        //requestHTML((dataReturned.movies[i].filename).slice(0, -4) + ".html");                                                 
+                        var abc = i.toString();
+                        document.getElementById('movieContent').innerHTML += "<p class=\"movieClass\" id=\"" + abc + "\">" + dataReturned.movies[i].title + "</p>";                                                
+                    }
+                    for (i = 0; i < numberOfMovies && i < 100; i++) {
+                        document.getElementById(i.toString()).onclick = function() {
+                            var xyz = dataReturned.movies[this.id].filename.slice(0, -4) + ".html";
+                            console.log("hypertext $filename: " + xyz);
+                            requestHTML(xyz);
+                        };
                     }
                 }
             }
