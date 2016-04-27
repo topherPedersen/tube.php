@@ -1,0 +1,18 @@
+<h1 id="h1" onclick="goHome();">dangerous.php</h1>
+<div id="mainContent">
+<div id="btn-wrapper">
+<button class="btn" id="left-btn" onclick="leftButtonFunction();">Watch Movies</button><button class="btn" id="right-btn" onclick="rightButtonFunction();">Upload Movies</button>
+</div>
+<br>
+<br>
+<center><progress id="progressBar" value="0" max="100" style="visibility: hidden;"></progress></center>
+<br>
+<form id="upload_form" enctype="multipart/form-data" method="post">
+  <input type="file" name="file1" id="file1"><br>
+  <input type="button" name="hiddenUploadBtn" id="hiddenUploadBtn" value="Upload File" onclick="uploadFile()"><br>
+  <h3 id="status"></h3>
+  <p id="loaded_n_total"></p>
+</form>
+</div>
+<div id="movieContent">
+</div>
