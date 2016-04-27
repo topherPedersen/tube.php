@@ -36,7 +36,8 @@
 </style>
 </head>
 <body>
-<h1 id="h1">dangerous.php</h1>
+<div id="allContent">
+<h1 id="h1" onclick="goHome();">dangerous.php</h1>
 <div id="mainContent">
 <div id="btn-wrapper">
 <button class="btn" id="left-btn" onclick="leftButtonFunction();">Watch Movies</button><button class="btn" id="right-btn" onclick="rightButtonFunction();">Upload Movies</button>
@@ -54,7 +55,22 @@
 </div>
 <div id="movieContent">
 </div>
+</div> <!-- END TAG FOR <div id="allContent"> -->
 <script>
+    function goHome() {
+	   buttonClickStatus = false;
+       var url = "homepage.html";
+       var httpRequest = new XMLHttpRequest();
+       httpRequest.open("GET", url, true);
+       httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+       httpRequest.onreadystatechange = function() {
+           if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+               document.getElementById('allContent').innerHTML = "";
+               document.getElementById('allContent').innerHTML += httpRequest.responseText;
+           }
+       }
+       httpRequest.send();
+    }
       function _(el) {
     return document.getElementById(el);
   }
@@ -97,10 +113,6 @@
     _("status").innerHTML = "Upload Aborted";
   }
 
-
-
-
-
    function requestHTML(url) {
        var httpRequest = new XMLHttpRequest();
        httpRequest.open("GET", url, true);
@@ -115,9 +127,6 @@
        httpRequest.send();
     }
 
-
-
-    
     var buttonClickStatus = false;
     function rightButtonFunction() {
         if (buttonClickStatus == false) {
@@ -141,12 +150,6 @@
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState == 4 && httpRequest.status == 200) {
                     var dataReturned = JSON.parse(httpRequest.responseText);
-                    // Code to be executed upon AJAX call goes here
-                    // For future reference, use the dataReturned object with dot notation 
-                    // to access the data returned. For example: dataReturned.firstName, dataReturned.lastName
-                    // where firstName and lastName are the "keys" from the returned JSON file
-                    // DO STUFF HERE
-                    // dataReturned.movies[0].title || dataReturned.movies[0].filename
                     var numberOfMovies = dataReturned.movies.length;
                     document.getElementById('mainContent').innerHTML = ""; // remove everything but h1
                     for (i = 0; i < numberOfMovies && i < 100; i++) {
@@ -169,3 +172,4 @@
 </script>
 </body>
 </html>
+
