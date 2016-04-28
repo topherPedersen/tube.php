@@ -78,7 +78,7 @@
 </head>
 <body>
 <div id="allContent">
-<h1 id="h1" onclick="goHome();">dangerous.php</h1>
+<h1 id="h1" onclick="goHome();">tube.php</h1>
 <div id="mainContent">
 <div id="btn-wrapper">
 <button class="btn" id="left-btn" onclick="leftButtonFunction();">Watch Movies</button><button class="btn" id="right-btn" onclick="rightButtonFunction();">Upload Movies</button>
@@ -129,7 +129,7 @@
     ajax.addEventListener("load", completeHandler, false);
     ajax.addEventListener("error", errorHandler, false);
     ajax.addEventListener("abort", abortHandler, false);
-    ajax.open("POST", "dangerous.php");
+    ajax.open("POST", "tube.php");
     ajax.send(formdata);
     document.getElementById('progressBar').style = "width: 65%; visibility: visible;";
   }
@@ -185,7 +185,7 @@
             // watch movies
             // AJAX -------------------------------------------------------------------------------------------
             var httpRequest = new XMLHttpRequest();
-            var url = "dangerous-movies.php"
+            var url = "movies.php"
             httpRequest.open("GET", url, true);
             httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             httpRequest.onreadystatechange = function() {
