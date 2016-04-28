@@ -1,6 +1,6 @@
 <?php
 
-$mysqli = new mysqli("localhost", "DATABASE-ADMINISTRATOR-NAME-GOES-HERE", "Milf15milf", "DATABASE-NAME-GOES-HERE");
+$mysqli = new mysqli("localhost", "DATABASE-ADMINISTRATOR-NAME-GOES-HERE", "DATABASE-PASSWORD-GOES-HERE", "DATABASE-NAME-GOES-HERE");
 $query = "SELECT * FROM dangerousTable;";
 $result = $mysqli->query($query);
 $movieCount = 0;
