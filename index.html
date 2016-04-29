@@ -4,6 +4,9 @@
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900' rel='stylesheet' type='text/css'>
 <meta name="viewport" content="initial-scale=1 user-scalable=no">
 <style>
+    #scroll-btn {
+	    visibility: hidden;
+	}
     @media (min-width: 751px) {
         #h1 {
             margin-top: 3em;
@@ -96,6 +99,7 @@
 </div>
 <div id="movieContent">
 </div>
+<center><button id="scroll-btn">Load More</button></center>
 </div> <!-- END TAG FOR <div id="allContent"> -->
 <script>
     function goHome() {
@@ -172,6 +176,41 @@
             document.getElementById('hiddenUploadBtn').click();
         }
     }
+	
+	
+	function infiniteFunction() {
+        var httpRequest = new XMLHttpRequest();
+        var url = "movies.php"
+        httpRequest.open("GET", url, true);
+        httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        httpRequest.onreadystatechange = function() {
+            if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                var dataReturned = JSON.parse(httpRequest.responseText);
+                var numberOfMovies = dataReturned.movies.length;
+                for (i = highestMovieNumber + 1; i < numberOfMovies && i < highestMovieNumber + 3; i++) {
+                    var abc = i.toString();
+                    document.getElementById('movieContent').innerHTML += "<p class=\"movieClass\" id=\"" + abc + "\">" + dataReturned.movies[i].title + "</p>"; 
+                }
+	            for (i = highestMovieNumber + 1; i < numberOfMovies && i < highestMovieNumber + 3; i++) {
+                    document.getElementById(i.toString()).onclick = function() {
+                        var xyz = dataReturned.movies[this.id].filename.slice(0, -4) + ".html";
+                        console.log("hypertext $filename: " + xyz);
+                        requestHTML(xyz);
+                    };
+				    highestMovieNumber = i;
+					console.log(highestMovieNumber);
+                }
+            }
+        }
+        httpRequest.send();
+		console.log(highestMovieNumber);
+    }
+
+    var highestMovieNumber = -1;
+	console.log(highestMovieNumber);
+	
+	
+	
     function leftButtonFunction() {
         if (buttonClickStatus == true) {
             document.getElementById("file1").click();
@@ -187,20 +226,27 @@
                     var dataReturned = JSON.parse(httpRequest.responseText);
                     var numberOfMovies = dataReturned.movies.length;
                     document.getElementById('mainContent').innerHTML = ""; // remove everything but h1
-                    for (i = 0; i < numberOfMovies && i < 100; i++) {
+                    for (i = 0; i < numberOfMovies && i < 2; i++) {
                         var abc = i.toString();
-                        document.getElementById('movieContent').innerHTML += "<p class=\"movieClass\" id=\"" + abc + "\">" + dataReturned.movies[i].title + "</p>";                                                
+                        document.getElementById('movieContent').innerHTML += "<p class=\"movieClass\" id=\"" + abc + "\">" + dataReturned.movies[i].title + "</p>"; 
+						highestMovieNumber = i;
+						console.log(highestMovieNumber);
                     }
-                    for (i = 0; i < numberOfMovies && i < 100; i++) {
+					for (i = 0; i < numberOfMovies && i < 2; i++) {
                         document.getElementById(i.toString()).onclick = function() {
                             var xyz = dataReturned.movies[this.id].filename.slice(0, -4) + ".html";
                             console.log("hypertext $filename: " + xyz);
                             requestHTML(xyz);
                         };
                     }
+					document.getElementById('scroll-btn').style = "visibility: visible";
+					document.getElementById('scroll-btn').onclick = function() { 
+					    infiniteFunction();
+					};
                 }
             }
             httpRequest.send();
+			console.log(highestMovieNumber);
             // END AJAX CALL -----------------------------------------------------------------------------------
         } // end bracket for else statement;
     }// end bracket for leftButtonFunction()
