@@ -8,24 +8,24 @@
         #h1 {
             margin-top: 3em;
             text-align: center;
-	        font-family: Roboto;
-	        font-weight: 100;
-	        font-size: 4em;
+	    font-family: Roboto;
+	    font-weight: 100;
+	    font-size: 4em;
         }
         #btn-wrapper {
             text-align: center;
         }
         .btn {
             font-family: Roboto;
-	        font-weight: 100;
+	    font-weight: 100;
             font-size: 2em;
-	        height: 2.5em;
-	        width: 13em;
-	        margin-right: -1px;
-	        margin-left: -1px;
+	    height: 2.5em;
+	    width: 13em;
+	    margin-right: -1px;
+	    margin-left: -1px;
         }
         #upload_form {
-	        visibility: hidden;
+	    visibility: hidden;
         }
         .movieClass {
             font-family: Roboto;
@@ -35,32 +35,32 @@
             color: black;
             text-decoration: none;
         }
-		.videoClass {
-		    height: 33.33%;
-		}
+        .videoClass {
+            height: 33.33%;
 	}
+    }
     @media (max-width: 750px) {
         #h1 {
             margin-top: 2.5em;
             text-align: center;
-	        font-family: Roboto;
-	        font-weight: 100;
-	        font-size: 2.75em;
+	    font-family: Roboto;
+	    font-weight: 100;
+	    font-size: 2.75em;
         }
         #btn-wrapper {
             text-align: center;
         }
         .btn {
             font-family: Roboto;
-	        font-weight: 100;
+	    font-weight: 100;
             font-size: 2em;
-	        height: 2.5em;
-	        width: 90%;
-	        margin-right: -1px;
-	        margin-left: -1px;
+	    height: 2.5em;
+	    width: 90%;
+	    margin-right: -1px;
+	    margin-left: -1px;
         }
         #upload_form {
-	        visibility: hidden;
+	    visibility: hidden;
         }
         .movieClass {
             font-family: Roboto;
@@ -70,10 +70,10 @@
             color: black;
             text-decoration: none;
         }
-		.videoClass {
-		    width: 80%;
-		}
+        .videoClass {
+            width: 80%;
 	}
+    }
 </style>
 </head>
 <body>
@@ -88,10 +88,10 @@
 <center><progress id="progressBar" value="0" max="100" style="visibility: hidden;"></progress></center>
 <br>
 <form id="upload_form" enctype="multipart/form-data" method="post">
-  <input type="file" name="file1" id="file1"><br>
-  <input type="button" name="hiddenUploadBtn" id="hiddenUploadBtn" value="Upload File" onclick="uploadFile()"><br>
-  <h3 id="status"></h3>
-  <p id="loaded_n_total"></p>
+    <input type="file" name="file1" id="file1"><br>
+    <input type="button" name="hiddenUploadBtn" id="hiddenUploadBtn" value="Upload File" onclick="uploadFile()"><br>
+    <h3 id="status"></h3>
+    <p id="loaded_n_total"></p>
 </form>
 </div>
 <div id="movieContent">
@@ -99,61 +99,56 @@
 </div> <!-- END TAG FOR <div id="allContent"> -->
 <script>
     function goHome() {
-	   buttonClickStatus = false;
-       var url = "homepage.html";
-       var httpRequest = new XMLHttpRequest();
-       httpRequest.open("GET", url, true);
-       httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-       httpRequest.onreadystatechange = function() {
-           if (httpRequest.readyState == 4 && httpRequest.status == 200) {
-               document.getElementById('allContent').innerHTML = "";
-               document.getElementById('allContent').innerHTML += httpRequest.responseText;
-           }
-       }
-       httpRequest.send();
+        buttonClickStatus = false;
+        var url = "homepage.html";
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.open("GET", url, true);
+        httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        httpRequest.onreadystatechange = function() {
+            if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                document.getElementById('allContent').innerHTML = "";
+                document.getElementById('allContent').innerHTML += httpRequest.responseText;
+            }
+        }
+        httpRequest.send();
     }
-      function _(el) {
-    return document.getElementById(el);
-  }
-  function uploadFile() {
-    var title = prompt("Please Enter a Title for This Movie");
-    var file = _("file1").files[0];
-    console.log("file name: " + file.name);
-    console.log("file size: " + file.size);
-    console.log("file type: " + file.type);
-    var formdata = new FormData();
-    formdata.append("file1", file);
-    formdata.append("file2", title);
-    var ajax = new XMLHttpRequest();
-    ajax.upload.addEventListener("progress", progressHandler, false);
-    ajax.addEventListener("load", completeHandler, false);
-    ajax.addEventListener("error", errorHandler, false);
-    ajax.addEventListener("abort", abortHandler, false);
-    ajax.open("POST", "tube.php");
-    ajax.send(formdata);
-    document.getElementById('progressBar').style = "width: 65%; visibility: visible;";
-  }
-
-  function progressHandler(event) {
-    _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
-    var percent = (event.loaded / event.total) * 100;
-    _("progressBar").value = Math.round(percent);
-    _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
-  }
-
-  function completeHandler(event) {
-    alert("Upload Complete :)");
-    document.getElementById('progressBar').style = "visibility: hidden;";
-  } 
-
-  function errorHandler(event) {
-    _("status").innerHTML = "Upload Failed";
-  }
-
-  function abortHandler(event) {
-    _("status").innerHTML = "Upload Aborted";
-  }
-
+    function _(el) {
+        return document.getElementById(el);
+    }
+    function uploadFile() {
+        var title = prompt("Please Enter a Title for This Movie");
+        var file = _("file1").files[0];
+        console.log("file name: " + file.name);
+        console.log("file size: " + file.size);
+        console.log("file type: " + file.type);
+        var formdata = new FormData();
+        formdata.append("file1", file);
+        formdata.append("file2", title);
+        var ajax = new XMLHttpRequest();
+        ajax.upload.addEventListener("progress", progressHandler, false);
+        ajax.addEventListener("load", completeHandler, false);
+        ajax.addEventListener("error", errorHandler, false);
+        ajax.addEventListener("abort", abortHandler, false);
+        ajax.open("POST", "tube.php");
+        ajax.send(formdata);
+        document.getElementById('progressBar').style = "width: 65%; visibility: visible;";
+    }
+    function progressHandler(event) {
+        _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+        var percent = (event.loaded / event.total) * 100;
+        _("progressBar").value = Math.round(percent);
+        _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+    }
+    function completeHandler(event) {
+        alert("Upload Complete :)");
+        document.getElementById('progressBar').style = "visibility: hidden;";
+    } 
+    function errorHandler(event) {
+        _("status").innerHTML = "Upload Failed";
+    }
+    function abortHandler(event) {
+        _("status").innerHTML = "Upload Aborted";
+    }
    function requestHTML(url) {
        var httpRequest = new XMLHttpRequest();
        httpRequest.open("GET", url, true);
@@ -166,10 +161,9 @@
            }
        }
        httpRequest.send();
-    }
-
-    var buttonClickStatus = false;
-    function rightButtonFunction() {
+   }
+   var buttonClickStatus = false;
+   function rightButtonFunction() {
         if (buttonClickStatus == false) {
             document.getElementById('left-btn').innerHTML = "Select File";
             document.getElementById('right-btn').innerHTML = "Upload File";
