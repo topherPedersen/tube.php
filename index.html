@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900' rel='stylesheet' type='text/css'>
+<meta name="viewport" content="initial-scale=1 user-scalable=no">
+<style>
+    @media (min-width: 751px) {
+        #h1 {
+            margin-top: 3em;
+            text-align: center;
+	    font-family: Roboto;
+	    font-weight: 100;
+	    font-size: 4em;
+        }
+        #btn-wrapper {
+            text-align: center;
+        }
+        .btn {
+            font-family: Roboto;
+	    font-weight: 100;
+            font-size: 2em;
+	    height: 2.5em;
+	    width: 13em;
+	    margin-right: -1px;
+	    margin-left: -1px;
+        }
+        #upload_form {
+	    visibility: hidden;
+        }
+        .movieClass {
+            font-family: Roboto;
+            font-weight: 100;
+            font-size: 2em;
+            text-align: center;
+            color: black;
+            text-decoration: none;
+        }
+        .videoClass {
+            height: 33.33%;
+	}
+    }
+    @media (max-width: 750px) {
+        #h1 {
+            margin-top: 2.5em;
+            text-align: center;
+	    font-family: Roboto;
+	    font-weight: 100;
+	    font-size: 2.75em;
+        }
+        #btn-wrapper {
+            text-align: center;
+        }
+        .btn {
+            font-family: Roboto;
+	    font-weight: 100;
+            font-size: 2em;
+	    height: 2.5em;
+	    width: 90%;
+	    margin-right: -1px;
+	    margin-left: -1px;
+        }
+        #upload_form {
+	    visibility: hidden;
+        }
+        .movieClass {
+            font-family: Roboto;
+            font-weight: 100;
+            font-size: 2em;
+            text-align: center;
+            color: black;
+            text-decoration: none;
+        }
+        .videoClass {
+            width: 80%;
+	}
+    }
+</style>
+</head>
+<body>
+<div id="allContent">
+<h1 id="h1" onclick="goHome();">tube.php</h1>
+<div id="mainContent">
+<div id="btn-wrapper">
+<button class="btn" id="left-btn" onclick="leftButtonFunction();">Watch Movies</button><button class="btn" id="right-btn" onclick="rightButtonFunction();">Upload Movies</button>
+</div>
+<br>
+<br>
+<center><progress id="progressBar" value="0" max="100" style="visibility: hidden;"></progress></center>
+<br>
+<form id="upload_form" enctype="multipart/form-data" method="post">
+    <input type="file" name="file1" id="file1"><br>
+    <input type="button" name="hiddenUploadBtn" id="hiddenUploadBtn" value="Upload File" onclick="uploadFile()"><br>
+</form>
+</div>
+<div id="movieContent">
+</div>
+</div> <!-- END TAG FOR <div id="allContent"> -->
+<script>
+    // The goHome() function returns the user to initial user-interface state - "homepage"
+    function goHome() {
+        buttonClickStatus = false;
+        document.getElementById('allContent').innerHTML = "";
+        document.getElementById('allContent').innerHTML += '<h1 id="h1" onclick="goHome();">tube.php</h1><div id="mainContent"><div id="btn-wrapper"><button class="btn" id="left-btn" onclick="leftButtonFunction();">Watch Movies</button><button class="btn" id="right-btn" onclick="rightButtonFunction();">Upload Movies</button></div><br><br><center><progress id="progressBar" value="0" max="100" style="visibility: hidden;"></progress></center><br><form id="upload_form" enctype="multipart/form-data" method="post"><input type="file" name="file1" id="file1"><br><input type="button" name="hiddenUploadBtn" id="hiddenUploadBtn" value="Upload File" onclick="uploadFile()"><br></form></div><div id="movieContent"></div>';
+    }
+    // the uploadFile() function POSTS video files to the "tube.php" script
+    function uploadFile() {
+        var title = prompt("Please Enter a Title for This Movie");
+        var file = document.getElementById("file1").files[0];
+        console.log("file name: " + file.name);
+        console.log("file size: " + file.size);
+        console.log("file type: " + file.type);
+        var formdata = new FormData();
+        formdata.append("file1", file);
+        formdata.append("file2", title);
+        var ajax = new XMLHttpRequest();
+        ajax.upload.addEventListener("progress", progressHandler, false);
+        ajax.addEventListener("load", completeHandler, false);
+        ajax.addEventListener("error", errorHandler, false);
+        ajax.addEventListener("abort", abortHandler, false);
+        ajax.open("POST", "tube.php");
+        ajax.send(formdata);
+        document.getElementById('progressBar').style = "width: 65%; visibility: visible;";
+    }
+    // the progressHandler() function updates the HTML5 progress bar as files are uploaded
+    function progressHandler(event) {
+        var percent = (event.loaded / event.total) * 100;
+        document.getElementById("progressBar").value = Math.round(percent);
+    }
+    // the completeHandler() function notifies the user when the file upload is complete
+    // BUG NOTICE: There is lag time between when the progressBar reaches 100%, and the "Upload Complete :)" alert is triggered.
+    function completeHandler(event) {
+        alert("Upload Complete :)");
+        document.getElementById('progressBar').style = "visibility: hidden;";
+    }
+    // the errorHandler function triggers an error message when uploads fail 
+    function errorHandler(event) {
+        alert("PC LOAD LETTER"); // upload failed
+    }
+    // the abortHandler function triggers an error message when uploads are aborted
+    function abortHandler(event) {
+        alert("PC LOAD LETTER"); // upload aborted
+    }
+    // The requestHTML function requests HTML5 <video> via AJAX
+    function requestHTML(url) {
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.open("GET", url, true);
+        httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        httpRequest.onreadystatechange = function() {
+            if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                document.getElementById('mainContent').innerHTML = "";
+                document.getElementById('movieContent').innerHTML = "";
+                document.getElementById('mainContent').innerHTML += httpRequest.responseText;
+            }
+        }
+        httpRequest.send();
+    }
+    // the variable buttonClickStatus moniters the user-interface state for this single page application
+    var buttonClickStatus = false;
+    /*
+        ~ User Interface Code  ~
+
+        This single page application's userinterface consists of only 3 buttons: 
+            * a left button
+            * a right button
+            * and an h1 header (<h1>tube.php</h1>) that serves as a "homepage" button
+ 
+        When a user clicks the "homepage" button (h1 header), the goHome() function is triggered 
+        by an onclick attribute of the h1 header.
+
+        The left button will either display movies, or trigger "select file" event, depending
+        on the user-interface state (clickButtonStatus).
+
+        The right button will either change the user-interface state, or trigger an "upload file"
+        event depending upon the status of buttonClickStatus variable.
+    */
+    function rightButtonFunction() {
+        if (buttonClickStatus == false) {
+            document.getElementById('left-btn').innerHTML = "Select File";
+            document.getElementById('right-btn').innerHTML = "Upload File";
+            buttonClickStatus = true;
+        } else {
+            document.getElementById('hiddenUploadBtn').click(); // UPLOAD FILE EVENT
+        }
+    }
+    function leftButtonFunction() {
+        if (buttonClickStatus == true) {
+            document.getElementById("file1").click(); // SELECT FILE EVENT
+        } else {
+            // DISPLAY MOVIES VIA AJAX
+            var httpRequest = new XMLHttpRequest();
+            var url = "tube.php"
+            httpRequest.open("GET", url, true);
+            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            httpRequest.onreadystatechange = function() {
+                if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                    var dataReturned = JSON.parse(httpRequest.responseText);
+                    var numberOfMovies = dataReturned.movies.length;
+                    document.getElementById('mainContent').innerHTML = ""; // CLEAR MAIN CONTENT
+                    for (i = 0; i < numberOfMovies; i++) { // DISPLAY MOVIE TITLES
+                        var abc = i.toString();
+                        document.getElementById('movieContent').innerHTML += "<p class=\"movieClass\" id=\"" + abc + "\">" + dataReturned.movies[i].title + "</p>"; 
+						
+                    }
+		    for (i = 0; i < numberOfMovies; i++) { // CREATE ONCLICK EVENT FUNCTIONS FOR MOVIE TITLES
+                        document.getElementById(i.toString()).onclick = function() {
+                            var xyz = dataReturned.movies[this.id].filename.slice(0, -4) + ".html";
+                            console.log("hypertext $filename: " + xyz);
+                            requestHTML(xyz); // ONCLICK EVENT FUNCTIONS DISPLAY HTML5 <video>
+                        };
+                    }
+                }
+            }
+            httpRequest.send();
+        } 
+    }
+</script>
+</body>
+</html>
