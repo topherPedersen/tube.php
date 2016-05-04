@@ -90,25 +90,22 @@
 <form id="upload_form" enctype="multipart/form-data" method="post">
     <input type="file" name="file1" id="file1"><br>
     <input type="button" name="hiddenUploadBtn" id="hiddenUploadBtn" value="Upload File" onclick="uploadFile()"><br>
-    <h3 id="status"></h3>
-    <p id="loaded_n_total"></p>
 </form>
 </div>
 <div id="movieContent">
 </div>
 </div> <!-- END TAG FOR <div id="allContent"> -->
 <script>
+    // The goHome() function returns the user to initial user-interface state - "homepage"
     function goHome() {
         buttonClickStatus = false;
         document.getElementById('allContent').innerHTML = "";
-        document.getElementById('allContent').innerHTML += '<h1 id="h1" onclick="goHome();">tube.php</h1><div id="mainContent"><div id="btn-wrapper"><button class="btn" id="left-btn" onclick="leftButtonFunction();">Watch Movies</button><button class="btn" id="right-btn" onclick="rightButtonFunction();">Upload Movies</button></div><br><br><center><progress id="progressBar" value="0" max="100" style="visibility: hidden;"></progress></center><br><form id="upload_form" enctype="multipart/form-data" method="post"><input type="file" name="file1" id="file1"><br><input type="button" name="hiddenUploadBtn" id="hiddenUploadBtn" value="Upload File" onclick="uploadFile()"><br><h3 id="status"></h3><p id="loaded_n_total"></p></form></div><div id="movieContent"></div>';
+        document.getElementById('allContent').innerHTML += '<h1 id="h1" onclick="goHome();">tube.php</h1><div id="mainContent"><div id="btn-wrapper"><button class="btn" id="left-btn" onclick="leftButtonFunction();">Watch Movies</button><button class="btn" id="right-btn" onclick="rightButtonFunction();">Upload Movies</button></div><br><br><center><progress id="progressBar" value="0" max="100" style="visibility: hidden;"></progress></center><br><form id="upload_form" enctype="multipart/form-data" method="post"><input type="file" name="file1" id="file1"><br><input type="button" name="hiddenUploadBtn" id="hiddenUploadBtn" value="Upload File" onclick="uploadFile()"><br></form></div><div id="movieContent"></div>';
     }
-    function _(el) {
-        return document.getElementById(el);
-    }
+    // the uploadFile() function POSTS video files to the "tube.php" script
     function uploadFile() {
         var title = prompt("Please Enter a Title for This Movie");
-        var file = _("file1").files[0];
+        var file = document.getElementById("file1").files[0];
         console.log("file name: " + file.name);
         console.log("file size: " + file.size);
         console.log("file type: " + file.type);
@@ -124,22 +121,26 @@
         ajax.send(formdata);
         document.getElementById('progressBar').style = "width: 65%; visibility: visible;";
     }
+    // the progressHandler() function updates the HTML5 progress bar as files are uploaded
     function progressHandler(event) {
-        _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
         var percent = (event.loaded / event.total) * 100;
-        _("progressBar").value = Math.round(percent);
-        _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+        document.getElementById("progressBar").value = Math.round(percent);
     }
+    // the completeHandler() function notifies the user when the file upload is complete
+    // BUG NOTICE: There is lag time between when the progressBar reaches 100%, and the "Upload Complete :)" alert is triggered.
     function completeHandler(event) {
         alert("Upload Complete :)");
         document.getElementById('progressBar').style = "visibility: hidden;";
-    } 
+    }
+    // the errorHandler function triggers an error message when uploads fail 
     function errorHandler(event) {
-        _("status").innerHTML = "Upload Failed";
+        alert("PC LOAD LETTER"); // upload failed
     }
+    // the abortHandler function triggers an error message when uploads are aborted
     function abortHandler(event) {
-        _("status").innerHTML = "Upload Aborted";
+        alert("PC LOAD LETTER"); // upload aborted
     }
+    // The requestHTML function requests HTML5 <video> via AJAX
     function requestHTML(url) {
         var httpRequest = new XMLHttpRequest();
         httpRequest.open("GET", url, true);
@@ -153,22 +154,41 @@
         }
         httpRequest.send();
     }
+    // the variable buttonClickStatus moniters the user-interface state for this single page application
     var buttonClickStatus = false;
+    /*
+
+        ~ User Interface Code  ~
+
+        This single page application's userinterface consists of only 3 buttons: 
+            * a left button
+            * a right button
+            * and an h1 header (<h1>tube.php</h1>) that serves as a "homepage" button
+ 
+        When a user clicks the "homepage" button (h1 header), the goHome() function is triggered 
+        by an onclick attribute of the h1 header.
+
+        The left button will either display movies, or trigger "select file" event, depending
+        on the user-interface state (clickButtonStatus).
+
+        The right button will either change the user-interface state, or trigger an "upload file"
+        event depending upon the status of buttonClickStatus variable.
+
+    */
     function rightButtonFunction() {
         if (buttonClickStatus == false) {
             document.getElementById('left-btn').innerHTML = "Select File";
             document.getElementById('right-btn').innerHTML = "Upload File";
             buttonClickStatus = true;
         } else {
-            document.getElementById('hiddenUploadBtn').click();
+            document.getElementById('hiddenUploadBtn').click(); // UPLOAD FILE EVENT
         }
     }
     function leftButtonFunction() {
         if (buttonClickStatus == true) {
-            document.getElementById("file1").click();
+            document.getElementById("file1").click(); // SELECT FILE EVENT
         } else {
-            // watch movies
-            // AJAX -------------------------------------------------------------------------------------------
+            // DISPLAY MOVIES VIA AJAX
             var httpRequest = new XMLHttpRequest();
             var url = "movies.php"
             httpRequest.open("GET", url, true);
@@ -177,25 +197,24 @@
                 if (httpRequest.readyState == 4 && httpRequest.status == 200) {
                     var dataReturned = JSON.parse(httpRequest.responseText);
                     var numberOfMovies = dataReturned.movies.length;
-                    document.getElementById('mainContent').innerHTML = ""; // remove everything but h1
-                    for (i = 0; i < numberOfMovies; i++) {
+                    document.getElementById('mainContent').innerHTML = ""; // CLEAR MAIN CONTENT
+                    for (i = 0; i < numberOfMovies; i++) { // DISPLAY MOVIE TITLES
                         var abc = i.toString();
                         document.getElementById('movieContent').innerHTML += "<p class=\"movieClass\" id=\"" + abc + "\">" + dataReturned.movies[i].title + "</p>"; 
 						
                     }
-		    for (i = 0; i < numberOfMovies; i++) {
+		    for (i = 0; i < numberOfMovies; i++) { // CREATE ONCLICK EVENT FUNCTIONS FOR MOVIE TITLES
                         document.getElementById(i.toString()).onclick = function() {
                             var xyz = dataReturned.movies[this.id].filename.slice(0, -4) + ".html";
                             console.log("hypertext $filename: " + xyz);
-                            requestHTML(xyz);
+                            requestHTML(xyz); // ONCLICK EVENT FUNCTIONS DISPLAY HTML5 <video>
                         };
                     }
                 }
             }
             httpRequest.send();
-            // END AJAX CALL -----------------------------------------------------------------------------------
-        } // end bracket for else statement;
-    }// end bracket for leftButtonFunction()
+        } 
+    }
 </script>
 </body>
 </html>
