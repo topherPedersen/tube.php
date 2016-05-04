@@ -157,7 +157,6 @@
     // the variable buttonClickStatus moniters the user-interface state for this single page application
     var buttonClickStatus = false;
     /*
-
         ~ User Interface Code  ~
 
         This single page application's userinterface consists of only 3 buttons: 
@@ -173,7 +172,6 @@
 
         The right button will either change the user-interface state, or trigger an "upload file"
         event depending upon the status of buttonClickStatus variable.
-
     */
     function rightButtonFunction() {
         if (buttonClickStatus == false) {
@@ -190,7 +188,7 @@
         } else {
             // DISPLAY MOVIES VIA AJAX
             var httpRequest = new XMLHttpRequest();
-            var url = "movies.php"
+            var url = "tube.php"
             httpRequest.open("GET", url, true);
             httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             httpRequest.onreadystatechange = function() {
