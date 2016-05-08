@@ -106,11 +106,18 @@
                 }
             }
 			$oldestMovie = $movie[1]['time'];
-		    mysql_connect('localhost', $admin, $password);
-            mysql_select_db($databaseName) or die("Unable to select database");
-		    $query = "DELETE FROM $tableName WHERE time = $oldestMovie;";
-            mysql_query($query);
-            mysql_close($databaseName);
+			$mysqli = new mysqli("localhost", $admin, $password, $databaseName);
+            $query = "SELECT filename FROM $tableName WHERE time = $oldestMovie;";
+            $result = $mysqli->query($query);
+		    $resultArray = $result->fetch_assoc();
+		    $mp4filename = $resultArray['filename'];
+		    $baseFileName = substr($mp4filename, 0, strrpos($mp4filename, '.'));
+            $hyperTextFileName = $baseFileName . ".html";
+		    unlink($mp4filename); // DELETE MP4 FILE FROM FILESYSTEM
+		    unlink($hyperTextFileName); // DELETE HTML FILE FROM FILE SYSTEM
+			$query = "DELETE FROM $tableName WHERE time = $oldestMovie;"; // DELETE FROM DATABASE
+			$mysqli->query($query);
+		    $mysqli->close();
 		}
 		// movies sorted, oldest deleted
     }    
