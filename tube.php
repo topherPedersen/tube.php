@@ -36,7 +36,7 @@
     function uploadFile($databaseName, $admin, $password, $tableName) {
         $fileTitle = $_POST['file2'];
         $fileName= $_FILES["file1"]["name"];
-		$fileTime = time();
+	$fileTime = time();
         $fileTmpLoc = $_FILES["file1"]["tmp_name"];
         $fileType = $_FILES["file1"]["type"];
         $fileSize = $_FILES["file1"]["size"];
