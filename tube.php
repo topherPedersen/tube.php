@@ -3,7 +3,7 @@
     $databaseName = "DATABASE-NAME-GOES-HERE";
     $admin = "ADMIN-NAME-GOES-HERE";
     $password = "PASSWORD-GOES-HERE";
-	$tableName = "TABLE-NAME-GOES-HERE";
+    $tableName = "TABLE-NAME-GOES-HERE";
 	
     function echoJSON($databaseName, $admin, $password, $tableName) {
         $mysqli = new mysqli("localhost", $admin, $password, $databaseName);
