@@ -72,53 +72,52 @@
     } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         uploadFile($databaseName, $admin, $password, $tableName);
 		            
-		// bubble sort & delete oldest movie
-	    // Create a Multi Dimensional Array of Movie Data (time, title, filename)
-		$mysqli = new mysqli("localhost", $admin, $password, $databaseName);
+	// bubble sort & delete oldest movie
+	// Create a Multi Dimensional Array of Movie Data (time, title, filename)
+	$mysqli = new mysqli("localhost", $admin, $password, $databaseName);
         $query = "SELECT * FROM $tableName;";
         $result = $mysqli->query($query);
         $movieCount = 0;
         while ($row = $result->fetch_assoc()) {
-	        global $movieCount;
+	    global $movieCount;
             $movieCount++;
-	        $movie[$movieCount]['time'] = $row['time'];
+	    $movie[$movieCount]['time'] = $row['time'];
             $movie[$movieCount]['title'] = $row['title'];
             $movie[$movieCount]['filename'] = $row['filename'];
         }
         $mysqli->close();
 	        
-		if ($movieCount >= 9) {
-	        // bubble sort $movie[]['time'] to retrieve oldest movie unix epoch time
-	        $keepSorting = true;
+	if ($movieCount >= 9) {
+	    // bubble sort $movie[]['time'] to retrieve oldest movie unix epoch time
+	    $keepSorting = true;
             while ($keepSorting == true) {
-	            global $movie;
+	        global $movie;
                 $keepSorting = false;
                 for ($i = 1; $i < $movieCount; $i++) {
                     $a = $i;
-	                $b = $i + 1;
-	                if ($movie[$a]['time'] > $movie[$b]['time']) {
-		                global $keepSorting;
-		                $keepSorting = true;
-	                    $placeholder = $movie[$b]['time'];
-		                $movie[$b]['time'] = $movie[$a]['time'];
-		                $movie[$a]['time'] = $placeholder;
-	                }  
+	            $b = $i + 1;
+	            if ($movie[$a]['time'] > $movie[$b]['time']) {
+		        global $keepSorting;
+		        $keepSorting = true;
+	                $placeholder = $movie[$b]['time'];
+		        $movie[$b]['time'] = $movie[$a]['time'];
+		        $movie[$a]['time'] = $placeholder;
+	            }  
                 }
             }
-			$oldestMovie = $movie[1]['time'];
-			$mysqli = new mysqli("localhost", $admin, $password, $databaseName);
+	    $oldestMovie = $movie[1]['time'];
+	    $mysqli = new mysqli("localhost", $admin, $password, $databaseName);
             $query = "SELECT filename FROM $tableName WHERE time = $oldestMovie;";
             $result = $mysqli->query($query);
-		    $resultArray = $result->fetch_assoc();
-		    $mp4filename = $resultArray['filename'];
-		    $baseFileName = substr($mp4filename, 0, strrpos($mp4filename, '.'));
+            $resultArray = $result->fetch_assoc();
+            $mp4filename = $resultArray['filename'];
+            $baseFileName = substr($mp4filename, 0, strrpos($mp4filename, '.'));
             $hyperTextFileName = $baseFileName . ".html";
-		    unlink($mp4filename); // DELETE MP4 FILE FROM FILESYSTEM
-		    unlink($hyperTextFileName); // DELETE HTML FILE FROM FILE SYSTEM
-			$query = "DELETE FROM $tableName WHERE time = $oldestMovie;"; // DELETE FROM DATABASE
-			$mysqli->query($query);
-		    $mysqli->close();
-		}
-		// movies sorted, oldest deleted
+            unlink($mp4filename); // DELETE MP4 FILE FROM FILESYSTEM
+            unlink($hyperTextFileName); // DELETE HTML FILE FROM FILE SYSTEM
+	    $query = "DELETE FROM $tableName WHERE time = $oldestMovie;"; // DELETE FROM DATABASE
+	    $mysqli->query($query);
+            $mysqli->close();
+	} // movies sorted, oldest deleted
     }    
 ?>
