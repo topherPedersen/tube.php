@@ -109,17 +109,25 @@
         console.log("file name: " + file.name);
         console.log("file size: " + file.size);
         console.log("file type: " + file.type);
-        var formdata = new FormData();
-        formdata.append("file1", file);
-        formdata.append("file2", title);
-        var ajax = new XMLHttpRequest();
-        ajax.upload.addEventListener("progress", progressHandler, false);
-        ajax.addEventListener("load", completeHandler, false);
-        ajax.addEventListener("error", errorHandler, false);
-        ajax.addEventListener("abort", abortHandler, false);
-        ajax.open("POST", "tube.php");
-        ajax.send(formdata);
-        document.getElementById('progressBar').style = "width: 65%; visibility: visible;";
+        if (file.size > 2000000000) {
+            alert("PC LOAD LETTER: The file you're attempting to upload is too large. FILE SIZE LIMIT: 2 gigabytes");
+            return; // return is used as a quick and dirty hack to jump out of the function, not to actually return a value
+        }
+        if (file.type == "video/mp4" || file.type == "video/x-matroska") {
+            var formdata = new FormData();
+            formdata.append("file1", file);
+            formdata.append("file2", title);
+            var ajax = new XMLHttpRequest();
+            ajax.upload.addEventListener("progress", progressHandler, false);
+            ajax.addEventListener("load", completeHandler, false);
+            ajax.addEventListener("error", errorHandler, false);
+            ajax.addEventListener("abort", abortHandler, false);
+            ajax.open("POST", "tube.php");
+            ajax.send(formdata);
+            document.getElementById('progressBar').style = "width: 65%; visibility: visible;";
+        } else {
+            alert("PC LOAD LETTER: Regrettably, tube.php only supports the mp4 & mkv video formats :(");
+        }
     }
     // the progressHandler() function updates the HTML5 progress bar as files are uploaded
     function progressHandler(event) {
